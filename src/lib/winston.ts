@@ -11,7 +11,7 @@ if (config.NODE_ENV !== 'production') {
     new winston.transports.Console({
       format: combine(
         colorize({ all: true }), // Add colors to log levels
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss A' }), // Add timestamp to logs
+        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Add timestamp to logs
         align(), // Align log messages
         printf(({ timestamp, level, message, ...meta }) => {
           const metaStr = Object.keys(meta).length
