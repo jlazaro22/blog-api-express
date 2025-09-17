@@ -12,6 +12,7 @@
     "module": "nodenext",
     "esModuleInterop": true,
     "target": "esnext",
+    "typeRoots": ["./src/@types"],
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],

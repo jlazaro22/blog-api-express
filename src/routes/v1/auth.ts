@@ -1,17 +1,21 @@
 import { Router } from 'express';
+
 import login from 'src/controllers/v1/auth/login';
+import logout from 'src/controllers/v1/auth/logout';
 import refreshToken from 'src/controllers/v1/auth/refresh-token';
 import register from 'src/controllers/v1/auth/register';
+import authenticate from 'src/middlewares/authenticate';
 import {
-  userLoginRequestValidation,
-  userRefreshTokenRequestValidation,
-  userRegisterRequestValidation,
-} from 'src/middlewares/validations/user-validations';
+  loginRequestValidation,
+  refreshTokenRequestValidation,
+  registerRequestValidation,
+} from 'src/middlewares/validations/auth-validations';
 
 const router: Router = Router();
 
-router.post('/register', userRegisterRequestValidation, register);
-router.post('/login', userLoginRequestValidation, login);
-router.post('/refresh-token', userRefreshTokenRequestValidation, refreshToken);
+router.post('/register', registerRequestValidation, register);
+router.post('/login', loginRequestValidation, login);
+router.post('/refresh-token', refreshTokenRequestValidation, refreshToken);
+router.post('/logout', authenticate, logout);
 
 export default router;
