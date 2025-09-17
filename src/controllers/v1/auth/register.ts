@@ -27,6 +27,17 @@ export default async function register(
   }
 
   try {
+    const userExists = await User.exists({ email });
+
+    if (userExists) {
+      res.status(401).json({
+        code: 'AuthenticationError',
+        message: 'User already registered.',
+      });
+
+      return;
+    }
+
     const username = generateUsername();
 
     const newUser = await User.create({

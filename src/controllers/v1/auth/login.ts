@@ -1,7 +1,8 @@
+import { compare } from 'bcryptjs';
 import { Request, Response } from 'express';
+
 import config from 'src/config';
 import { generateAccessToken, generateRefreshToken } from 'src/lib/jwt';
-
 import { logger } from 'src/lib/winston';
 import Token from 'src/models/token';
 import User, { IUser } from 'src/models/user';
@@ -21,9 +22,20 @@ export default async function login(
       .exec();
 
     if (!user) {
-      res.status(404).json({
-        code: 'NotFound',
-        message: 'User not found.',
+      res.status(401).json({
+        code: 'AuthenticationError',
+        message: 'Invalid credentials.',
+      });
+
+      return;
+    }
+
+    const passwordMatch = await compare(password, user.password);
+
+    if (!passwordMatch) {
+      res.status(401).json({
+        code: 'AuthenticationError',
+        message: 'Invalid credentials.',
       });
 
       return;
@@ -57,7 +69,7 @@ export default async function login(
       accessToken,
     });
 
-    logger.info('User registered successfully.', user);
+    logger.info('User logged in successfully.', user);
   } catch (err) {
     res.status(500).json({
       code: 'ServerError',
