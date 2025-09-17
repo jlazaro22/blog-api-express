@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import config from 'src/config';
-import { generateAccessToken, generateRefreshToken } from 'src/lib/jwt';
 
 import { logger } from 'src/lib/winston';
-import Token from 'src/models/token';
 import User, { IUser } from 'src/models/user';
 import { generateUsername } from 'src/utils';
 
@@ -38,24 +36,24 @@ export default async function register(
       role,
     });
 
-    const accessToken = generateAccessToken(newUser._id);
-    const refreshToken = generateRefreshToken(newUser._id);
+    // const accessToken = generateAccessToken(newUser._id);
+    // const refreshToken = generateRefreshToken(newUser._id);
 
-    await Token.create({
-      token: refreshToken,
-      userId: newUser._id,
-    });
+    // await Token.create({
+    //   token: refreshToken,
+    //   userId: newUser._id,
+    // });
 
-    logger.info('Refresh token created for user:', {
-      userId: newUser._id,
-      token: refreshToken,
-    });
+    // logger.info('Refresh token created for user:', {
+    //   userId: newUser._id,
+    //   token: refreshToken,
+    // });
 
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: config.NODE_ENV === 'production',
-      sameSite: 'strict',
-    });
+    // res.cookie('refreshToken', refreshToken, {
+    //   httpOnly: true,
+    //   secure: config.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    // });
 
     res.status(201).json({
       user: {
@@ -63,7 +61,7 @@ export default async function register(
         email: newUser.email,
         role: newUser.role,
       },
-      accessToken,
+      // accessToken,
     });
 
     logger.info('User registered successfully.', {
