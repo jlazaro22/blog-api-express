@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 
 import { logger } from 'src/lib/winston';
 import Token from 'src/models/token';
+import User from 'src/models/user';
 
-export default async function logout(
+export default async function deleteCurrentUser(
   req: Request,
   res: Response,
 ): Promise<void> {
+  const userId = req.userId;
+
   try {
     const refreshToken: string = req.cookies.refreshToken;
 
@@ -25,11 +28,10 @@ export default async function logout(
       sameSite: 'strict',
     });
 
-    res.sendStatus(204);
+    await User.deleteOne({ _id: userId });
+    logger.info('User account deleted successfully.', { userId });
 
-    logger.info('User logged out successfully.', {
-      userId: req.userId,
-    });
+    res.sendStatus(204);
   } catch (err) {
     res.status(500).json({
       code: 'ServerError',
@@ -37,6 +39,6 @@ export default async function logout(
       error: err,
     });
 
-    logger.error('Error during user logout.', err);
+    logger.error('Error while deleting current user account.', err);
   }
 }
