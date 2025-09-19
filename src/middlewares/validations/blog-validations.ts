@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import handleValidationErrors from './handle-validation-errors';
 
 export const createBlogRequestValidation = [
@@ -15,5 +15,30 @@ export const createBlogRequestValidation = [
     .optional()
     .isIn(['draft', 'published'])
     .withMessage('Status must be either "draft" or "published"'),
+  handleValidationErrors,
+];
+
+export const getAllBlogsRequestValidation = [
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 50 })
+    .withMessage('Limit must be between 1 and 50'),
+  query('offset')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Offset must be a positive integer'),
+  handleValidationErrors,
+];
+
+export const getBlogsByUserIdRequestValidation = [
+  param('userId').notEmpty().isMongoId().withMessage('Invalid user ID'),
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 50 })
+    .withMessage('Limit must be between 1 and 50'),
+  query('offset')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Offset must be a positive integer'),
   handleValidationErrors,
 ];
