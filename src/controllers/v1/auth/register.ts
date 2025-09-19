@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import config from 'src/config';
 
+import config from 'src/config';
 import { logger } from 'src/lib/winston';
 import User, { IUser } from 'src/models/user';
 import { generateUsername } from 'src/utils';
