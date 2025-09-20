@@ -1,6 +1,8 @@
+import { v2 as cloudinary } from 'cloudinary';
 import { Request, Response } from 'express';
 
 import { logger } from 'src/lib/winston';
+import Blog from 'src/models/blog';
 import Token from 'src/models/token';
 import User from 'src/models/user';
 
@@ -11,6 +13,24 @@ export default async function deleteCurrentUser(
   const userId = req.userId;
 
   try {
+    const blogs = await Blog.find({ author: userId })
+      .select('banner.publicId')
+      .lean()
+      .exec();
+
+    const publicIds = blogs.map(({ banner }) => banner.publicId);
+
+    await cloudinary.api.delete_resources(publicIds);
+    logger.info('Multiple blog banners deleted from Cloudinary.', {
+      publicIds,
+    });
+
+    await Blog.deleteMany({ author: userId });
+    logger.info('Multiple blogs deleted.', { userId, blogs });
+
+    await User.deleteOne({ _id: userId });
+    logger.info('User account deleted successfully.', { userId });
+
     const refreshToken: string = req.cookies.refreshToken;
 
     if (refreshToken) {
@@ -27,9 +47,6 @@ export default async function deleteCurrentUser(
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
     });
-
-    await User.deleteOne({ _id: userId });
-    logger.info('User account deleted successfully.', { userId });
 
     res.sendStatus(204);
   } catch (err) {

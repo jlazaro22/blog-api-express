@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 import createBlog from 'src/controllers/v1/blog/create-blog';
+import deleteBlog from 'src/controllers/v1/blog/delete-blog';
 import getAllBlogs from 'src/controllers/v1/blog/get-all-blogs';
 import getBlogBySlug from 'src/controllers/v1/blog/get-blog-by-slug';
 import getBlogsByUserId from 'src/controllers/v1/blog/get-blogs-by-user-id';
@@ -66,5 +67,7 @@ router.put(
   uploadBlogBanner('put'),
   updateBlog,
 );
+
+router.delete('/:blogId', authenticate, authorize(['admin']), deleteBlog);
 
 export default router;
