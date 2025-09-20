@@ -11,7 +11,7 @@ cloudinary.config({
 
 export default function uploadToCloudinary(
   buffer: Buffer<ArrayBufferLike>,
-  // publicId?: string,
+  publicId: string,
 ): Promise<UploadApiResponse | undefined> {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
@@ -20,7 +20,7 @@ export default function uploadToCloudinary(
           allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
           resource_type: 'image',
           folder: 'blog-api',
-          // public_id: publicId,
+          public_id: publicId,
           transformation: { quality: 'auto' },
         },
         (err, result) => {

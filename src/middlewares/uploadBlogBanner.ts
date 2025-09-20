@@ -2,6 +2,7 @@ import { UploadApiErrorResponse } from 'cloudinary';
 import { NextFunction, Request, Response } from 'express';
 import uploadToCloudinary from 'src/lib/cloudinary';
 import { logger } from 'src/lib/winston';
+import Blog from 'src/models/blog';
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -31,12 +32,13 @@ export default function uploadBlogBanner(method: 'post' | 'put') {
     }
 
     try {
-      // const { blogId } = req.params;
-      // const blog = await Blog.findById(blogId).select('banner.publicId').exec();
+      const { blogId } = req.params;
+      const blog = await Blog.findById(blogId).select('banner.publicId').exec();
 
+      const publicId = blog?.banner?.publicId;
       const data = await uploadToCloudinary(
         req.file.buffer,
-        // blog?.banner.publicId.replace('blog-api/', ''),
+        publicId ? publicId.replace('blog-api/', '') : '',
       );
 
       if (!data) {
@@ -45,13 +47,10 @@ export default function uploadBlogBanner(method: 'post' | 'put') {
           message: 'Internal server error.',
         });
 
-        logger.error(
-          'Error while uploading blog banner image to cloudinary.',
-          // {
-          // blogId,
-          // publicId: blog?.banner.publicId
-          // }
-        );
+        logger.error('Error while uploading blog banner image to cloudinary.', {
+          blogId,
+          publicId: blog?.banner.publicId,
+        });
 
         return;
       }
@@ -64,7 +63,7 @@ export default function uploadBlogBanner(method: 'post' | 'put') {
       };
 
       logger.info('Blog banner uploaded to Cloudinary.', {
-        // blogId,
+        blogId,
         banner: newBanner,
       });
 

@@ -42,3 +42,28 @@ export const getBlogsByUserIdRequestValidation = [
     .withMessage('Offset must be a positive integer'),
   handleValidationErrors,
 ];
+
+export const getBlogBySlugRequestValidation = [
+  param('slug').notEmpty().withMessage('Slug is required'),
+  handleValidationErrors,
+];
+
+export const updateBlogParamRequestValidation = [
+  param('blogId').notEmpty().isMongoId().withMessage('Invalid blog ID'),
+  handleValidationErrors,
+];
+
+export const updateBlogBodyRequestValidation = [
+  body('title')
+    .optional()
+    .isLength({
+      max: 180,
+    })
+    .withMessage('Title must be less than 180 characters long'),
+  body('content').optional(),
+  body('status')
+    .optional()
+    .isIn(['draft', 'published'])
+    .withMessage('Status must be either "draft" or "published"'),
+  handleValidationErrors,
+];

@@ -44,7 +44,7 @@ export default function authenticate(
     if (err instanceof TokenExpiredError) {
       res.status(401).json({
         code: 'AuthenticationError',
-        message: 'Refresh token expired, please login again.',
+        message: 'Access token expired, please login again.',
       });
 
       return;
