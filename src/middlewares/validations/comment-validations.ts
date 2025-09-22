@@ -6,3 +6,8 @@ export const commentBlogRequestValidation = [
   body('content').trim().notEmpty().withMessage('Content is required'),
   handleValidationErrors,
 ];
+
+export const getCommentsByBlogIdRequestValidation = [
+  param('blogId').isMongoId().withMessage('Invalid blog ID'),
+  handleValidationErrors,
+];
