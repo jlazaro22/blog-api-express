@@ -11,3 +11,8 @@ export const getCommentsByBlogIdRequestValidation = [
   param('blogId').isMongoId().withMessage('Invalid blog ID'),
   handleValidationErrors,
 ];
+
+export const deleteCommentRequestValidation = [
+  param('commentId').isMongoId().withMessage('Invalid comment ID'),
+  handleValidationErrors,
+];
