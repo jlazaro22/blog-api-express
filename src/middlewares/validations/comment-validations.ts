@@ -1,12 +1,8 @@
 import { body, param } from 'express-validator';
 import handleValidationErrors from './handle-validation-errors';
 
-export const likeUnlikeBlogRequestValidation = [
+export const commentBlogRequestValidation = [
   param('blogId').isMongoId().withMessage('Invalid blog ID'),
-  body('userId')
-    .notEmpty()
-    .withMessage('User ID is required')
-    .isMongoId()
-    .withMessage('Invalid user ID'),
+  body('content').trim().notEmpty().withMessage('Content is required'),
   handleValidationErrors,
 ];

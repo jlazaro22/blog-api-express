@@ -2,8 +2,9 @@ import { Router } from 'express';
 
 import authRoutes from './auth';
 import blogRoutes from './blog';
-import userRoutes from './user';
+import commentRoutes from './comment';
 import likeRoutes from './like';
+import userRoutes from './user';
 
 const router: Router = Router();
 
@@ -21,5 +22,6 @@ router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/blogs', blogRoutes);
 router.use('/likes', likeRoutes);
+router.use('/comments', commentRoutes);
 
 export default router;
