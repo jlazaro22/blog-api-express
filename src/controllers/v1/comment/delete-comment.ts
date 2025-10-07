@@ -44,11 +44,10 @@ export default async function deleteComment(
       return;
     }
 
+    await Comment.deleteOne({ _id: commentId });
     logger.info('Comment deleted successfully.', {
       commentId,
     });
-
-    await Comment.deleteOne({ _id: commentId });
 
     const blog = await Blog.findById(comment.blogId)
       .select('commentsCount')

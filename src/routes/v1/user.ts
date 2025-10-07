@@ -22,6 +22,7 @@ router.get(
   authorize(['admin', 'user']),
   getCurrentUser,
 );
+
 router.put(
   '/current',
   authenticate,
@@ -29,6 +30,7 @@ router.put(
   userUpdateRequestValidation,
   updateCurrentUser,
 );
+
 router.delete(
   '/current',
   authenticate,
